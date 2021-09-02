@@ -25,7 +25,7 @@ const InputField: React.FC<IInputFieldProps> = ({
     onChange,
     disabled,
     placeholder,
-    className: `px-2 py-3 border border-solid border-gray-border rounded-md text-input-label w-full resize-none ${
+    className: `px-2 py-3 border border-solid border-gray-border rounded-md text-input-label w-full resize-none outline-none focus:border-blue ${
       !value ? "text-placeholder" : "text-black"
     }`,
   };
