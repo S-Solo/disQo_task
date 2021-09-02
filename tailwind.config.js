@@ -6,13 +6,13 @@ module.exports = {
     textColor: {
       black: "#333",
       white: "#fff",
+      placeholder: "#AAA",
     },
     colors: {
       blue: "#39ACDC",
       red: "#EC3646",
       green: "#57B93E",
-      placeholder: "#AAA",
-      border: "#CCC",
+      "gray-border": "#CCC",
     },
     backgroundColor: {
       body: "#EEE",
