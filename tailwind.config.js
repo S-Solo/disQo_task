@@ -6,16 +6,18 @@ module.exports = {
     textColor: {
       black: "#333",
       white: "#fff",
+      placeholder: "#AAA",
     },
     colors: {
+      "gray-border": "#CCC",
+      blue: "#39ACDC",
+    },
+    backgroundColor: {
       blue: "#39ACDC",
       red: "#EC3646",
       green: "#57B93E",
-      placeholder: "#AAA",
-      border: "#CCC",
-    },
-    backgroundColor: {
       body: "#EEE",
+      white: "#fff",
     },
     fontSize: {
       "main-title": "24px",
