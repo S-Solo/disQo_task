@@ -30,6 +30,7 @@ const Note: React.FC<INoteProps> = ({
           onChange={(e) => {
             titleValueChange(e.target.value);
           }}
+          placeholder="Enter note title..."
           className="max-w-xl"
         />
         {!isNew && (
@@ -44,6 +45,7 @@ const Note: React.FC<INoteProps> = ({
         onChange={(e) => {
           noteValueChange(e.target.value);
         }}
+        placeholder="Enter note..."
         multiline
         className="mb-2 max-w-xl"
       />
