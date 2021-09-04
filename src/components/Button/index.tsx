@@ -4,6 +4,7 @@ interface IButtonProps {
   onClick: () => void;
   type: "green" | "white" | "blue" | "red";
   disabled?: boolean;
+  className?: string;
 }
 
 const Button: React.FC<IButtonProps> = ({
@@ -11,6 +12,7 @@ const Button: React.FC<IButtonProps> = ({
   type,
   disabled = false,
   children,
+  className = "",
 }) => {
   return (
     <button
@@ -18,7 +20,7 @@ const Button: React.FC<IButtonProps> = ({
         type !== "white"
           ? "text-white border-none"
           : "text-black border border-solid border-gray-border"
-      } bg-${type} font-semibold text-button`}
+      } bg-${type} font-semibold text-button ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

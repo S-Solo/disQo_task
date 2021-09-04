@@ -8,6 +8,7 @@ interface IInputFieldProps {
   placeholder?: string;
   rows?: number;
   multiline?: boolean;
+  className?: string;
 }
 
 const InputField: React.FC<IInputFieldProps> = ({
@@ -17,7 +18,8 @@ const InputField: React.FC<IInputFieldProps> = ({
   disabled = false,
   placeholder = "",
   multiline = false,
-  rows = 3,
+  rows = 4,
+  className = "",
 }) => {
   const baseProps = {
     name,
@@ -27,7 +29,7 @@ const InputField: React.FC<IInputFieldProps> = ({
     placeholder,
     className: `px-2 py-3 border border-solid border-gray-border rounded-md text-input-label w-full resize-none outline-none focus:border-blue ${
       !value ? "text-placeholder" : "text-black"
-    }`,
+    } ${className}`,
   };
   return !multiline ? (
     <input {...baseProps} />
