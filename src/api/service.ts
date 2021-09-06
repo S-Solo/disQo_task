@@ -1,4 +1,6 @@
 import axios from "axios";
+import { makeQueryStringFromObject } from "utils/makeQueryStringFromObject";
+import { ICreateGistArgs, IPublicGistsQueryParams, IUpdateArgs } from "./types";
 
 class Service {
   baseUrl: string;
@@ -12,19 +14,58 @@ class Service {
   getGists = async () => {
     const res = await axios.get(this.baseUrl);
     return res.data;
+    // service.getGists()
   };
 
-  createGist = async (filename: string, text: string) => {
+  getPublicGists = async (queryObject: IPublicGistsQueryParams) => {
+    const res = await axios.get(
+      `${this.baseUrl}/public${makeQueryStringFromObject(queryObject)}`
+    );
+    return res.data;
+    // service.getPublicGists({
+    //   since: getFiveSecondsEarlierDate(),
+    //   page: 1,
+    //   per_page: GISTS_PER_PAGE,
+    // });
+  };
+
+  createGist = async ({
+    fileName,
+    content,
+    description,
+    isPublic = false,
+  }: ICreateGistArgs) => {
     const res = await axios.post(this.baseUrl, {
-      // descripion do I need this ? // TODO
-      public: false,
-      files: { [filename]: { content: text } },
+      ...(description && { description }),
+      public: isPublic,
+      files: { [fileName]: { content } },
     });
     return res.data;
+    // service.createGist(state.noteName, state.noteContent);
   };
 
-  updateGist = async () => {};
-  deleteGist = async () => {};
+  updateGist = async ({
+    gistId,
+    fileName,
+    content,
+    description,
+  }: IUpdateArgs) => {
+    const res = await axios.patch(`${this.baseUrl}/${gistId}`, {
+      ...(description && { description }),
+      files: { [fileName]: { content } },
+    });
+    return res.data;
+    // service.updateGist({
+    //   gistId: gist.id,
+    //   description: "Something",
+    //   files: { [fileName]: { content: fileContent } },
+    // });
+  };
+
+  deleteGist = async (gistId: string) => {
+    await axios.delete(`${this.baseUrl}/${gistId}`);
+    // service.deleteGist(gist.id);
+  };
 }
 
 const service = new Service();

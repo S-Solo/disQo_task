@@ -10,7 +10,10 @@ function App() {
   });
 
   const addNoteHandler = () => {
-    service.createGist(state.titleValue, state.noteValue);
+    service.createGist({
+      fileName: state.titleValue,
+      content: state.noteValue,
+    });
   };
 
   const deleteNoteHandler = () => {};
