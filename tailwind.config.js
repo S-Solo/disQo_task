@@ -7,6 +7,7 @@ module.exports = {
       black: "#333",
       white: "#fff",
       placeholder: "#AAA",
+      red: "#EC3646",
     },
     colors: {
       "gray-border": "#CCC",
@@ -18,6 +19,7 @@ module.exports = {
       green: "#57B93E",
       body: "#EEE",
       white: "#fff",
+      disabled: "#dddddd",
     },
     fontSize: {
       "main-title": "24px",
@@ -27,7 +29,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ["disabled"],
+    },
   },
   plugins: [],
 };

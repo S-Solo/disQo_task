@@ -3,35 +3,40 @@ import InputField from "components/InputField";
 import React from "react";
 
 interface INoteProps {
-  titleValue: string;
-  titleValueChange: (newVal: string) => void;
-  noteValue: string;
-  noteValueChange: (newVal: string) => void;
+  noteTitle: string;
+  noteTitleChange: (newVal: string) => void;
+  noteTitleError?: string;
+  noteContent: string;
+  noteContentChange: (newVal: string) => void;
+  noteContentError?: string;
   isNew: boolean;
-  onAdd: () => void;
-  onDelete: () => void;
+  onAdd?: () => void;
+  onDelete?: () => void;
 }
 
 const Note: React.FC<INoteProps> = ({
-  titleValue,
-  titleValueChange,
-  noteValue,
-  noteValueChange,
+  noteTitle,
+  noteTitleChange,
+  noteTitleError = "",
+  noteContent,
+  noteContentChange,
+  noteContentError = "",
   isNew,
-  onAdd,
-  onDelete,
+  onAdd = () => {},
+  onDelete = () => {},
 }) => {
   return (
     <div className="flex flex-col items-start">
-      <div className="flex mb-2 w-full">
+      <div className="flex mb-2">
         <InputField
           name="Note Title"
-          value={titleValue}
+          value={noteTitle}
           onChange={(e) => {
-            titleValueChange(e.target.value);
+            noteTitleChange(e.target.value);
           }}
           placeholder="Enter note title..."
-          className="max-w-xl"
+          errorText={noteTitleError}
+          containerClassName="w-96"
         />
         {!isNew && (
           <Button type="red" onClick={onDelete} className="ml-2">
@@ -41,16 +46,21 @@ const Note: React.FC<INoteProps> = ({
       </div>
       <InputField
         name="Note Title"
-        value={noteValue}
+        value={noteContent}
         onChange={(e) => {
-          noteValueChange(e.target.value);
+          noteContentChange(e.target.value);
         }}
         placeholder="Enter note..."
         multiline
-        className="mb-2 max-w-xl"
+        errorText={noteContentError}
+        containerClassName="mb-2 w-96"
       />
       {isNew && (
-        <Button type="green" onClick={onAdd}>
+        <Button
+          type="green"
+          onClick={onAdd}
+          disabled={!noteTitle.trim() || !noteContent.trim()}
+        >
           Add
         </Button>
       )}

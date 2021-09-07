@@ -1,36 +1,13 @@
-import service from "api/service";
+import React from "react";
 import Layout from "components/Layout";
-import Note from "components/Note";
-import React, { useState } from "react";
+import Notepad from "containers/Notepad";
 
-function App() {
-  const [state, setState] = useState({
-    titleValue: "",
-    noteValue: "",
-  });
-
-  const addNoteHandler = () => {
-    service.createGist({
-      fileName: state.titleValue,
-      content: state.noteValue,
-    });
-  };
-
-  const deleteNoteHandler = () => {};
-
+const App = () => {
   return (
     <Layout>
-      <Note
-        titleValue={state.titleValue}
-        titleValueChange={(val) => setState({ ...state, titleValue: val })}
-        noteValue={state.noteValue}
-        noteValueChange={(val) => setState({ ...state, noteValue: val })}
-        isNew
-        onAdd={addNoteHandler}
-        onDelete={deleteNoteHandler}
-      />
+      <Notepad />
     </Layout>
   );
-}
+};
 
 export default App;

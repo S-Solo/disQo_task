@@ -20,7 +20,7 @@ const Button: React.FC<IButtonProps> = ({
         type !== "white"
           ? "text-white border-none"
           : "text-black border border-solid border-gray-border"
-      } bg-${type} font-semibold text-button ${className}`}
+      } bg-${type} font-semibold text-button disabled:opacity-50 ${className}`}
       onClick={onClick}
       disabled={disabled}
     >
