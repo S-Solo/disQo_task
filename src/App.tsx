@@ -1,11 +1,20 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import Layout from "components/Layout";
-import Notepad from "containers/Notepad";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
+const Notepad = lazy(() => import("./containers/Notepad"));
 
 const App = () => {
   return (
     <Layout>
-      <Notepad />
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route exact path="/" component={Notepad} />
+            <Route path="/test" render={() => <div>Test Route</div>} />
+          </Switch>
+        </Suspense>
+      </Router>
     </Layout>
   );
 };
