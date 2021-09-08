@@ -16,11 +16,11 @@ const Button: React.FC<IButtonProps> = ({
 }) => {
   return (
     <button
-      className={`py-3 px-8 rounded-md transform hover:scale-105 focus:ring-1 ${
+      className={`py-2 md:py-3 px-4 md:px-8 rounded-md transform hover:scale-105 focus:ring-1 ${
         type !== "white"
           ? "text-white border-none"
           : "text-black border border-solid border-gray-border"
-      } bg-${type} font-semibold text-button ${className}`}
+      } bg-${type} font-semibold text-button disabled:opacity-50 ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

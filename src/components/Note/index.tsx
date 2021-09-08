@@ -3,54 +3,69 @@ import InputField from "components/InputField";
 import React from "react";
 
 interface INoteProps {
-  titleValue: string;
-  titleValueChange: (newVal: string) => void;
-  noteValue: string;
-  noteValueChange: (newVal: string) => void;
+  noteTitle: string;
+  noteTitleChange: (newVal: string) => void;
+  noteTitleError?: string;
+  noteContent: string;
+  noteContentChange: (newVal: string) => void;
+  noteContentError?: string;
   isNew: boolean;
-  onAdd: () => void;
-  onDelete: () => void;
+  onAdd?: () => void;
+  onDelete?: () => void;
 }
 
 const Note: React.FC<INoteProps> = ({
-  titleValue,
-  titleValueChange,
-  noteValue,
-  noteValueChange,
+  noteTitle,
+  noteTitleChange,
+  noteTitleError = "",
+  noteContent,
+  noteContentChange,
+  noteContentError = "",
   isNew,
-  onAdd,
-  onDelete,
+  onAdd = () => {},
+  onDelete = () => {},
 }) => {
   return (
     <div className="flex flex-col items-start">
-      <div className="flex mb-2 w-full">
-        <InputField
-          name="Note Title"
-          value={titleValue}
-          onChange={(e) => {
-            titleValueChange(e.target.value);
-          }}
-          placeholder="Enter note title..."
-          className="max-w-xl"
-        />
+      <div className="flex flex-col md:flex-row items-start w-full">
+        <div className="flex flex-col w-full md:w-min">
+          <InputField
+            name="Note Title"
+            value={noteTitle}
+            onChange={(e) => {
+              noteTitleChange(e.target.value);
+            }}
+            placeholder="Enter note title..."
+            errorText={noteTitleError}
+            containerClassName="w-full md:w-96 mb-2"
+          />
+          <InputField
+            name="Note Title"
+            value={noteContent}
+            onChange={(e) => {
+              noteContentChange(e.target.value);
+            }}
+            placeholder="Enter note..."
+            multiline
+            maxLength={1000}
+            errorText={noteContentError}
+            containerClassName="mb-2 w-full md:w-96"
+          />
+        </div>
+
         {!isNew && (
-          <Button type="red" onClick={onDelete} className="ml-2">
+          <Button type="red" onClick={onDelete} className="md:ml-2">
             Delete
           </Button>
         )}
       </div>
-      <InputField
-        name="Note Title"
-        value={noteValue}
-        onChange={(e) => {
-          noteValueChange(e.target.value);
-        }}
-        placeholder="Enter note..."
-        multiline
-        className="mb-2 max-w-xl"
-      />
+
       {isNew && (
-        <Button type="green" onClick={onAdd}>
+        <Button
+          type="green"
+          onClick={onAdd}
+          disabled={!noteTitle.trim() || !noteContent.trim()}
+        >
           Add
         </Button>
       )}

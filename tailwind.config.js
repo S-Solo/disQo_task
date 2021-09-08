@@ -7,6 +7,7 @@ module.exports = {
       black: "#333",
       white: "#fff",
       placeholder: "#AAA",
+      red: "#EC3646",
     },
     colors: {
       "gray-border": "#CCC",
@@ -27,7 +28,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ["disabled"],
+    },
   },
   plugins: [],
 };
