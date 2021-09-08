@@ -1,12 +1,13 @@
-import Layout from "components/Layout";
 import React from "react";
+import Layout from "components/Layout";
+import Notepad from "containers/Notepad";
 
-function App() {
+const App = () => {
   return (
     <Layout>
-      <div>Skeleton</div>
+      <Notepad />
     </Layout>
   );
-}
+};
 
 export default App;
