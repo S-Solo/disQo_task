@@ -1,6 +1,11 @@
+export interface FilesType {
+  [key: string]: {
+    content: string;
+  };
+}
+
 export interface ICreateGistArgs {
-  fileName: string;
-  content: string;
+  files: FilesType;
   description?: string;
   isPublic?: boolean;
 }
@@ -13,7 +18,6 @@ export interface IPublicGistsQueryParams {
 
 export interface IUpdateArgs {
   gistId: string;
-  fileName: string;
-  content: string;
+  files: FilesType;
   description?: string;
 }

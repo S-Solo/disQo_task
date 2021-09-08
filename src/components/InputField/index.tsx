@@ -36,11 +36,14 @@ const InputField: React.FC<IInputFieldProps> = ({
     }`,
   };
   return (
-    <div className={`flex flex-col ${containerClassName}`}>
+    <div className={`flex flex-col relative ${containerClassName}`}>
       {!multiline ? (
         <input {...baseProps} maxLength={maxLength} />
       ) : (
-        <textarea {...baseProps} rows={rows} maxLength={maxLength} />
+        <>
+          <textarea {...baseProps} rows={rows} maxLength={maxLength} />
+          <div className="absolute right-2 -bottom-5 text-input-label text-placeholder">{`${value.length}/${maxLength}`}</div>
+        </>
       )}
       {errorText && (
         <p className="text-red text-input-label mt-1">{errorText}</p>

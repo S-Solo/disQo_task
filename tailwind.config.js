@@ -19,7 +19,6 @@ module.exports = {
       green: "#57B93E",
       body: "#EEE",
       white: "#fff",
-      disabled: "#dddddd",
     },
     fontSize: {
       "main-title": "24px",

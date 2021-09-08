@@ -17,6 +17,12 @@ class Service {
     // service.getGists()
   };
 
+  getGist = async (gistId: string) => {
+    const res = await axios.get(`${this.baseUrl}/${gistId}`);
+    return res.data;
+    // service.getGists()
+  };
+
   getPublicGists = async (queryObject: IPublicGistsQueryParams) => {
     const res = await axios.get(
       `${this.baseUrl}/public${makeQueryStringFromObject(queryObject)}`
@@ -30,29 +36,23 @@ class Service {
   };
 
   createGist = async ({
-    fileName,
-    content,
+    files,
     description,
     isPublic = false,
   }: ICreateGistArgs) => {
     const res = await axios.post(this.baseUrl, {
       ...(description && { description }),
       public: isPublic,
-      files: { [fileName]: { content } },
+      files,
     });
     return res.data;
     // service.createGist(state.noteName, state.noteContent);
   };
 
-  updateGist = async ({
-    gistId,
-    fileName,
-    content,
-    description,
-  }: IUpdateArgs) => {
+  updateGist = async ({ gistId, files, description }: IUpdateArgs) => {
     const res = await axios.patch(`${this.baseUrl}/${gistId}`, {
       ...(description && { description }),
-      files: { [fileName]: { content } },
+      files,
     });
     return res.data;
     // service.updateGist({

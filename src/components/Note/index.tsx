@@ -27,34 +27,39 @@ const Note: React.FC<INoteProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-start">
-      <div className="flex mb-2">
-        <InputField
-          name="Note Title"
-          value={noteTitle}
-          onChange={(e) => {
-            noteTitleChange(e.target.value);
-          }}
-          placeholder="Enter note title..."
-          errorText={noteTitleError}
-          containerClassName="w-96"
-        />
+      <div className="flex flex-col md:flex-row items-start w-full">
+        <div className="flex flex-col w-full md:w-min">
+          <InputField
+            name="Note Title"
+            value={noteTitle}
+            onChange={(e) => {
+              noteTitleChange(e.target.value);
+            }}
+            placeholder="Enter note title..."
+            errorText={noteTitleError}
+            containerClassName="w-full md:w-96 mb-2"
+          />
+          <InputField
+            name="Note Title"
+            value={noteContent}
+            onChange={(e) => {
+              noteContentChange(e.target.value);
+            }}
+            placeholder="Enter note..."
+            multiline
+            maxLength={1000}
+            errorText={noteContentError}
+            containerClassName="mb-2 w-full md:w-96"
+          />
+        </div>
+
         {!isNew && (
-          <Button type="red" onClick={onDelete} className="ml-2">
+          <Button type="red" onClick={onDelete} className="md:ml-2">
             Delete
           </Button>
         )}
       </div>
-      <InputField
-        name="Note Title"
-        value={noteContent}
-        onChange={(e) => {
-          noteContentChange(e.target.value);
-        }}
-        placeholder="Enter note..."
-        multiline
-        errorText={noteContentError}
-        containerClassName="mb-2 w-96"
-      />
+
       {isNew && (
         <Button
           type="green"

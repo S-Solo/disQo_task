@@ -1,24 +1,32 @@
 import Note from "components/Note";
 import InputField from "components/InputField";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { INote } from "./types";
 import Button from "components/Button";
+import service from "api/service";
+import { FilesType } from "api/types";
+import appStorage from "api/appStorage";
 
 const newNoteInitialState = {
+  id: 0,
   noteTitle: "",
   noteContent: "",
 };
 
 const Notepad: React.FC = () => {
+  const [gistId, setGistId] = useState(appStorage.load("gistId", "local"));
   const [notepadTitle, setNotepadTitle] = useState("");
   const [newNoteState, setNewNoteState] = useState<INote>({
     ...newNoteInitialState,
   });
-  const [notes, setNotes] = useState<INote[]>([]);
+  const [notes, setNotes] = useState<INote[]>(
+    appStorage.load("notes", "local") || []
+  );
   const [errors, setErrors] = useState({
     notepadTitleError: "",
     noteTitleError: "",
   });
+  const saveToStorageTimer = useRef<any>();
 
   const notepadTitleChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -46,15 +54,27 @@ const Notepad: React.FC = () => {
       ...errors,
       noteTitleError: "",
     });
-    setNotes([
-      { noteTitle: noteTitle.trim(), noteContent: noteContent.trim() },
-      ...notes,
-    ]);
+    const newNotes = [
+      {
+        id: 1,
+        noteTitle: noteTitle.trim(),
+        noteContent: noteContent.trim(),
+      },
+      ...notes.map((el, idx) => ({ ...el, id: idx + 2 })),
+    ];
+    clearTimeout(saveToStorageTimer.current);
+    saveToStorageTimer.current = setTimeout(() => {
+      appStorage.save("notes", newNotes, "local");
+    }, 2000);
+    setNotes(newNotes);
     setNewNoteState({ ...newNoteInitialState });
   };
 
   const deleteNoteHandler = (idx: number) => {
-    setNotes(notes.filter((_, index) => idx !== index));
+    const filteredNotes = notes.filter((_, index) => idx !== index);
+    const newNotes = filteredNotes.map((el, idx) => ({ ...el, id: idx + 1 }));
+    setNotes(newNotes);
+    // TODO delete note file from server
   };
 
   const handleNoteChange = (
@@ -62,22 +82,81 @@ const Notepad: React.FC = () => {
     propName: keyof INote,
     newValue: string
   ) => {
-    setNotes(
-      notes.map((el, index) => {
-        if (idx !== index) {
-          return el;
-        }
-        return {
-          ...el,
-          [propName]: newValue,
-        };
-      })
-    );
+    const newNotes = notes.map((el, index) => {
+      if (idx !== index) {
+        return el;
+      }
+      return {
+        ...el,
+        [propName]: newValue,
+      };
+    });
+    clearTimeout(saveToStorageTimer.current);
+    saveToStorageTimer.current = setTimeout(() => {
+      appStorage.save("notes", newNotes, "local");
+    }, 2000);
+    setNotes(newNotes);
   };
+
+  const saveNotepad = async () => {
+    const files: FilesType = {};
+    notes.forEach((el) => {
+      files[el.noteTitle] = { content: el.noteContent };
+    });
+    const params = {
+      description: notepadTitle,
+      files,
+    };
+    if (gistId) {
+      await service.updateGist({ gistId, ...params });
+    } else {
+      const res = await service.createGist(params);
+      const { id } = res;
+      appStorage.save("gistId", id, "local");
+      setGistId(id);
+    }
+  };
+
+  const deleteNotepadHandler = async () => {
+    try {
+      await service.deleteGist(gistId);
+    } finally {
+      resetNotepad();
+    }
+  };
+
+  const resetNotepad = () => {
+    setNotes([]);
+    setNotepadTitle("");
+    setErrors({ noteTitleError: "", notepadTitleError: "" });
+    setGistId(undefined);
+    setNewNoteState({ ...newNoteInitialState });
+    appStorage.clear("local");
+  };
+
+  useEffect(() => {
+    const currentGistId = appStorage.load("gistId", "local");
+    if (currentGistId) {
+      const setNotesInitial = async () => {
+        const res = await service.getGist(currentGistId);
+        const { files, description } = res;
+        const newNotes: INote[] = Object.keys(files).map((key, idx) => {
+          return {
+            id: idx + 1,
+            noteTitle: key,
+            noteContent: files[key].content,
+          };
+        });
+        setNotes(newNotes);
+        setNotepadTitle(description);
+      };
+      setNotesInitial();
+    }
+  }, []);
 
   return (
     <div className="flex flex-col shadow-md bg-white rounded-md p-6">
-      <div className="flex justify-between">
+      <div className="flex flex-col md:flex-row justify-between">
         <div className="flex flex-col">
           <h2 className="text-note-header text-black mb-2">Notepad Title</h2>
           <InputField
@@ -86,28 +165,28 @@ const Notepad: React.FC = () => {
             onChange={notepadTitleChangeHandler}
             placeholder="My notepad title"
             maxLength={255}
-            containerClassName="mb-8 w-52"
+            containerClassName="mb-2 md:mb-8 w-52"
             errorText={errors.notepadTitleError}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center mb-5 md:mb-0">
           <Button className="mr-2" type="white" onClick={() => {}}>
             View Stats
           </Button>
           <Button
             className="mr-2"
             type="blue"
-            onClick={() => {}}
-            disabled={notes.length === 0}
+            onClick={saveNotepad}
+            disabled={notes.length === 0 || !notepadTitle.trim()}
           >
             Save
           </Button>
-          <Button type="red" onClick={() => {}}>
+          <Button type="red" onClick={deleteNotepadHandler}>
             Delete
           </Button>
         </div>
       </div>
-      <h2 className="text-main-title text-black mb-2">My Notes</h2>
+      <h2 className="text-notes-header text-black mb-2">My Notes</h2>
       <div className="mb-8">
         <Note
           noteTitle={newNoteState.noteTitle}
@@ -123,7 +202,7 @@ const Notepad: React.FC = () => {
       </div>
       {notes.map((note, idx) => {
         return (
-          <div className="mb-8" key={note.noteTitle}>
+          <div className="mb-8" key={note.id}>
             <Note
               noteTitle={note.noteTitle}
               noteTitleChange={(val) => handleNoteChange(idx, "noteTitle", val)}
