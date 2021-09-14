@@ -1,1 +1,1 @@
-export const GISTS_PER_PAGE = 5;
+export const GISTS_PER_PAGE = 100;

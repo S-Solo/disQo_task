@@ -6,21 +6,20 @@ class Service {
   baseUrl: string;
   constructor() {
     this.baseUrl = "https://api.github.com/gists";
-    axios.defaults.headers.common["Authorization"] =
-      "token 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";
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `token ${process.env.REACT_APP_AUTH_TOKEN}`;
     axios.defaults.headers.common["Accept"] = "application/vnd.github.v3+json";
   }
 
   getGists = async () => {
     const res = await axios.get(this.baseUrl);
     return res.data;
-    // service.getGists()
   };
 
   getGist = async (gistId: string) => {
     const res = await axios.get(`${this.baseUrl}/${gistId}`);
     return res.data;
-    // service.getGists()
   };
 
   getPublicGists = async (queryObject: IPublicGistsQueryParams) => {
@@ -28,11 +27,6 @@ class Service {
       `${this.baseUrl}/public${makeQueryStringFromObject(queryObject)}`
     );
     return res.data;
-    // service.getPublicGists({
-    //   since: getFiveSecondsEarlierDate(),
-    //   page: 1,
-    //   per_page: GISTS_PER_PAGE,
-    // });
   };
 
   createGist = async ({
@@ -46,7 +40,6 @@ class Service {
       files,
     });
     return res.data;
-    // service.createGist(state.noteName, state.noteContent);
   };
 
   updateGist = async ({ gistId, files, description }: IUpdateArgs) => {
@@ -55,16 +48,10 @@ class Service {
       files,
     });
     return res.data;
-    // service.updateGist({
-    //   gistId: gist.id,
-    //   description: "Something",
-    //   files: { [fileName]: { content: fileContent } },
-    // });
   };
 
   deleteGist = async (gistId: string) => {
     await axios.delete(`${this.baseUrl}/${gistId}`);
-    // service.deleteGist(gist.id);
   };
 }
 

@@ -3,6 +3,7 @@ import Layout from "components/Layout";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const Notepad = lazy(() => import("./containers/Notepad"));
+const Stats = lazy(() => import("./containers/Stats"));
 
 const App = () => {
   return (
@@ -11,7 +12,7 @@ const App = () => {
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
             <Route exact path="/" component={Notepad} />
-            <Route path="/test" render={() => <div>Test Route</div>} />
+            <Route path="/stats" component={Stats} />
           </Switch>
         </Suspense>
       </Router>
