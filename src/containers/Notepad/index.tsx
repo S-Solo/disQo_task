@@ -6,6 +6,7 @@ import Button from "components/Button";
 import service from "api/service";
 import { FilesType } from "api/types";
 import appStorage from "api/appStorage";
+import { useHistory } from "react-router-dom";
 
 const newNoteInitialState = {
   id: 0,
@@ -27,6 +28,7 @@ const Notepad: React.FC = () => {
     noteTitleError: "",
   });
   const saveToStorageTimer = useRef<any>();
+  const history = useHistory();
 
   const notepadTitleChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -155,7 +157,7 @@ const Notepad: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col shadow-md bg-white rounded-md p-6">
+    <div className="flex flex-col">
       <div className="flex flex-col md:flex-row justify-between">
         <div className="flex flex-col">
           <h2 className="text-note-header text-black mb-2">Notepad Title</h2>
@@ -170,7 +172,13 @@ const Notepad: React.FC = () => {
           />
         </div>
         <div className="flex items-center mb-5 md:mb-0">
-          <Button className="mr-2" type="white" onClick={() => {}}>
+          <Button
+            className="mr-2"
+            type="white"
+            onClick={() => {
+              history.push("/stats");
+            }}
+          >
             View Stats
           </Button>
           <Button
